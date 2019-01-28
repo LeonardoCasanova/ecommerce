@@ -3,7 +3,7 @@
     "authors": [
         {
             "name": "Leonardo Casanova",
-            "email": "leo.casanova@hotmail.com"
+            "email": "leo.casanova94@hotmail.com"
         }
     ],
     "require": {
@@ -13,7 +13,7 @@
     },
     "autoload": {
         "psr-4": {
-            "": "vendor\\hcodebr\\php-classes\\src"
+            "Hcode\\": "vendor\\hcodebr\\php-classes\\src"
         }
     }
 }
