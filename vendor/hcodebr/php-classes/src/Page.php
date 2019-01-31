@@ -9,6 +9,8 @@
    private $tpl;
    private $options = [];
    private $defauts = [
+     "header"=>true,
+     "footer"=>true,
      "data"=>[]
    ];
    
@@ -19,7 +21,7 @@
       
       $config = array( 
         "base_url"	=> null, 
-        "tpl_dir"	=>$_SERVER["DOCUMENT_ROOT"].$tpl_dir,
+        "tpl_dir"	=> $_SERVER["DOCUMENT_ROOT"].$tpl_dir,
         "cache_dir"	=> $_SERVER["DOCUMENT_ROOT"]."views-cache/",
         "debug"         => false
         );
@@ -30,7 +32,7 @@
 
       $this->setData($this->options["data"]);
 
-      $this->tpl->draw("header");
+      if($this->options["header"]=== true) $this->tpl->draw("header");
     }
     private function setData($data = array()){
       foreach ($this->options["data"] as $key => $value) {
@@ -45,7 +47,7 @@
     }
     public function __destruct() {
      
-      $this->tpl->draw("footer");
+      if($this->options["footer"]=== true) $this->tpl->draw("footer");
 
     }
       
