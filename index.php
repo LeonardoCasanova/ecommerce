@@ -22,7 +22,6 @@ $app->get('/admin', function () {
 
   User::verifyLogin();
 
-
   $page = new PageAdmin();
 
   $page->setTpl("index");
@@ -134,30 +133,7 @@ $app->post('/admin/users/:iduser', function ($iduser) {
   exit;
 });
 
-$app->get("/admin/forgot", function () {
 
-  $page = new PageAdmin(["header" => false, "footer" => false]);
-
-  $page->setTpl("forgot");
-});
-
-$app->post("/admin/forgot", function () {
-
-  $_POST["email"];
-
-	$user = User::getForgot($_POST["email"]);
-	
-  header("Location: /admin/forgot/sent");
-  exit;
-
-});
-
-$app->get("/admin/forgot/sent", function () {
-
-  $page = new PageAdmin(["header" => false, "footer" => false]);
-
-  $page->setTpl("forgot-sent");
-});
 
 $app->run();
 

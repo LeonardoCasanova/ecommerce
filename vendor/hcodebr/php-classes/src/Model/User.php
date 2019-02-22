@@ -1,15 +1,12 @@
 <?php
 
 namespace Hcode\Model;
-
 use Hcode\DB\Sql;
 use Hcode\Model;
-use Hcode\Mailer;
 
 class User extends Model {
 
     const SESSION = "User";
-    const SECRET = "hcodephp7secret";
 
     public static function login($login, $password) {
 
@@ -18,7 +15,6 @@ class User extends Model {
         $results = $sql->select("select * from tb_users where deslogin = :LOGIN", array(
             ":LOGIN" => $login,
         ));
-      
 
         if (count($results) === 0) {
             throw new \Exception("Usuário inexistente ou senha inválida.");
@@ -26,14 +22,14 @@ class User extends Model {
 
         $data = $results[0];
 
-
+       
         if (password_verify($password, $data["despassword"]) === 'true') {
 
-            $user = new User();
+              $user = new User();
 
-            $user->setData($data);
+              $user->setData($data);
 
-            $_SESSION[User::SESSION] = $user->getValues();
+              $_SESSION[User::SESSION] = $user->getValues();
 
             return $user;
 
@@ -42,7 +38,7 @@ class User extends Model {
             throw new \Exception("Usuário inexistente ou senha inválidas.");
         }
 
-    }
+    } 
 
     public static function verifyLogin($inadmin = true) {
 
@@ -91,7 +87,7 @@ class User extends Model {
         $sql = new Sql();
 
         $results = $sql->select("
-    SELECT * FROM tb_users a INNER JOIN tb_persons b USING(idperson) WHERE a.iduser = :iduser;", array(
+             SELECT * FROM tb_users a INNER JOIN tb_persons b USING(idperson) WHERE a.iduser = :iduser;", array(
             ":iduser" => $iduser,
         ));
 
@@ -120,7 +116,6 @@ class User extends Model {
         $this->setData($results[0]);
 
     }
-
     public function delete() {
 
         $sql = new Sql();
@@ -130,37 +125,37 @@ class User extends Model {
         ));
     }
 
-    public static function getForgot($email){
+   /* public static function getForgot($email) {
 
-       $sql = new Sql();
+        $sql = new Sql();
 
-       $results = $sql->select(" select * from tb_persons a inner join tb_users b using (idperson) where a.desemail = :email",
-         array(":email"=>$email
-        ));
-
-        if(count($results) === 0){
-           throw new \Exception("Error Processing Request",1);
-        }else{
-             
-            $data = $results[0];
-
-            $results2 = $sql->select( "
-                CALL sp_userspasswordsrecoveries_create (:iduser, :desip)",array(
-                ":iduser" =>$data["iduser"],
-                ":desip" =>$_SERVER["REMOTE_ADDR"]
+        $results = $sql->select(" select * from tb_persons a inner join tb_users b using (idperson) where a.desemail = :email",
+            array(":email" => $email,
             ));
 
-            if(count($results2) === 0){              
-                 throw new \Exception("Error Processing Request",1);
-            }else{
+        if (count($results) === 0) {
+            throw new \Exception("Error Processing Request", 1);
+        } else {
+
+            $data = $results[0];
+
+            $results2 = $sql->select("
+                CALL sp_userspasswordsrecoveries_create (:iduser, :desip)", array(
+                ":iduser" => $data["iduser"],
+                ":desip" => $_SERVER["REMOTE_ADDR"],
+            ));
+
+            if (count($results2) === 0) {
+                throw new \Exception("Error Processing Request", 1);
+            } else {
                 $dataRecovery = $results2[0];
 
-                $code= base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_128,User::SECRET,$dataRecovery["idrecovery"],MCRYPT_MODE_EBC));
+                $code = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_128, User::SECRET, $dataRecovery["idrecovery"], MCRYPT_MODE_EBC));
 
                 $link = "http://www.hcodecommerce.com.br/admin/forgot/reset?code=$code";
-                $mailer = new Mailer($data["desemail"],$data["desperson"],"Redefinir senha da Hcode Store", "forgot",array(
-                    "name"=>$data["desperson"],
-                    "link"=>$link
+                $mailer = new Mailer($data["desemail"], $data["desperson"], "Redefinir senha da Hcode Store", "forgot", array(
+                    "name" => $data["desperson"],
+                    "link" => $link,
                 ));
 
                 $mailer->send();
@@ -170,5 +165,31 @@ class User extends Model {
 
         }
     }
+
+    public static function validForgotDecrypt($code) {
+
+        $idrecovery = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, User::SECRET, base64_decode($code), MCRYPT_MODE_EBC);
+
+        $sql = new Sql();
+
+        $results = $sql->select("select * from tb_userspasswordsrecoveries a
+                                inner join tb_users b using(iduser)
+                                inner join tb_persons c using(idperson)
+                                where
+                                a.idrecovery = :idrecovery
+                                and
+                                a.dtrecovery is null
+                                and
+                                date_add(a.dtregister, interval 1 hour)
+                                >= current_date()", array(
+                                ":idrecovery" => $idrecovery,
+        ));
+        if (count($results) === 0) {
+            throw new \Exception("Erro de Processamento", 1);
+        } else {
+            return $results[0];
+        }
+
+    } */
 
 }
