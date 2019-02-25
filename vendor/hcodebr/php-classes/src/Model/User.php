@@ -150,7 +150,7 @@ class User extends Model {
                 $dataRecovery = $results2[0];
                 $iv = random_bytes(openssl_cipher_iv_length('aes-256-cbc'));
                 $code = openssl_encrypt($dataRecovery['idrecovery'], 'aes-256-cbc', User::SECRET, 0, $iv);
-                $result = base64_encode($iv . $code);
+                $result = base64_encode($iv . $code);               
                 if ($inadmin === true) {
                     $link = "http://www.hcodecommerce.com.br/admin/forgot/reset?code=$result";
                 } else {
@@ -183,7 +183,8 @@ class User extends Model {
          AND
          DATE_ADD(a.dtregister, INTERVAL 1 HOUR) >= NOW();
      ", array(
-            ":idrecovery" => $idrecovery));
+            ":idrecovery" => $idrecovery,
+        ));
         if (count($results) === 0) {
             throw new \Exception("Não foi possível recuperar a senha.");
         } else {
@@ -191,24 +192,23 @@ class User extends Model {
         }
     }
 
-
-    public static function setForgotUsed($idrecovery){
+    public static function setForgotUsed($idrecovery) {
 
         $sql = new Sql();
 
         $sql->query("
-        update tb_userspasswordsrecoveries  set dt_recovery = now() where idrecovery = :idrecovery",array(
-            ":idrecovery"=> $idrecovery
+        update tb_userspasswordsrecoveries  set dt_recovery = now() where idrecovery = :idrecovery", array(
+            ":idrecovery" => $idrecovery,
         ));
     }
 
-    public function setPassword($password){
+    public function setPassword($password) {
 
         $sql = new Sql();
 
-        $sql->query("update tb_users set despassword = :password where iduser = :iduser",array(
-            ":password"=>$password,
-            ":iduser"=>$this->getiduser()
+        $sql->query("update tb_users set despassword = :password where iduser = :iduser", array(
+            ":password" => $password,
+            ":iduser" => $this->getiduser(),
         ));
 
     }
