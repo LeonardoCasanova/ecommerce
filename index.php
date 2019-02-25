@@ -240,7 +240,5 @@ $app->post("/admin/categories/create", function () {
 
 });
 
-
-
 $app->run();
 
