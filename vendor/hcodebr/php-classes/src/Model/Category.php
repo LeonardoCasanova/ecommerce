@@ -19,26 +19,22 @@ class Category extends Model {
         $sql = new Sql();
 
         $results = $sql->select(
-            "CALL sp_users_save(:desperson, :deslogin, :despassword,:desemail,:nrphone, :inadmin)",
+            "CALL sp_categories_save(:idcategory, :descategory)",
             array(
-                ":desperson" => $this->getdesperson(),
-                ":deslogin" => $this->getdeslogin(),
-                ":despassword" => $this->getdespassword(),
-                ":desemail" => $this->getdesemail(),
-                ":nrphone" => $this->getnrphone(),
-                ":inadmin" => $this->getinadmin(),
+                ":idcategory" => $this->getidcategory(),
+                ":descategory" => $this->getdescategory()
             )
         );
         $this->setData($results[0]);
     }
 
-    public function get($iduser) {
+    public function get($idcategory) {
 
         $sql = new Sql();
 
         $results = $sql->select("
-             SELECT * FROM tb_users a INNER JOIN tb_persons b USING(idperson) WHERE a.iduser = :iduser;", array(
-            ":iduser" => $iduser,
+             SELECT * FROM tb_categories  WHERE idcategory = :idcategory;", array(
+            ":idcategory" => $idcategory,
         ));
 
         $data = $results[0];
@@ -68,8 +64,8 @@ class Category extends Model {
 
         $sql = new Sql();
 
-        $sql->query("CALL sp_users_delete(:iduser)", array(
-            ":iduser" => $this->getiduser(),
+        $sql->query(" delete from tb_categories WHERE idcategory = :idcategory; ", array(
+            ":idcategory" => $this->getidcategory(),
         ));
     }
 
