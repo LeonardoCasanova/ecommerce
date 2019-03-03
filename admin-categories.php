@@ -1,5 +1,8 @@
 <?php
 
+use \Hcode\Model\Category;
+use \Hcode\Page;
+
 $app->get("/admin/categories/create", function () {
 
   User::verifyLogin();
