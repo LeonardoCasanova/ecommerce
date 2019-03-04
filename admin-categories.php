@@ -1,7 +1,9 @@
 <?php
 
 use \Hcode\Model\Category;
+use \Hcode\PageAdmin;
 use \Hcode\Page;
+use \Hcode\Model\User;
 
 $app->get("/admin/categories/create", function () {
 
