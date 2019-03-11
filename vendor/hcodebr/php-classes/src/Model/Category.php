@@ -133,6 +133,7 @@ class Category extends Model {
            ':idcategory'=>$this->getidcategory(),
            ':idproduct'=>$product->getidproduct()
         ]);
+
         
        }
 }
