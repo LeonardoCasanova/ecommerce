@@ -73,6 +73,14 @@ $app->get("/cart", function(){
     'products'=>$cart->getProducts()
   ]);
   
+<<<<<<< HEAD
+=======
+  $page->setTpl("cart", [
+    'cart' =>$cart->getValues(),
+    'products'=>$cart->getProducts()
+  ]);
+  
+>>>>>>> e0e40471a418da4d5c90245ffb7c18841ec47563
 });
 
 $app->get("/cart/:idproduct/add", function($idproduct){
@@ -83,12 +91,16 @@ $app->get("/cart/:idproduct/add", function($idproduct){
 
   $cart = Cart::getFromSession();
 
+<<<<<<< HEAD
   $qtd = (isset($_GET['qtd']))?(int)$_GET['qtd'] : 1;
 
   for ($i=0; $i < $qtd; $i++) { 
  
       $cart->addProduct($product);
   }
+=======
+  $cart->addProduct($product);
+>>>>>>> e0e40471a418da4d5c90245ffb7c18841ec47563
 
   header("Location: /cart");
   exit;
