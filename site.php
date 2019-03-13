@@ -67,8 +67,6 @@ $app->get("/cart", function(){
   $cart = Cart::getFromSession();
 
   $page = new Page();
-  
-  $page->setTpl("cart");
 
   $page->setTpl("cart", [
     'cart'=>$cart->getValues(),
@@ -85,7 +83,12 @@ $app->get("/cart/:idproduct/add", function($idproduct){
 
   $cart = Cart::getFromSession();
 
-  $cart->addProduct($product);
+  $qtd = (isset($_GET['qtd']))?(int)$_GET['qtd'] : 1;
+
+  for ($i=0; $i < $qtd; $i++) { 
+ 
+      $cart->addProduct($product);
+  }
 
   header("Location: /cart");
   exit;

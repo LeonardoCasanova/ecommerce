@@ -104,7 +104,7 @@ class Cart extends Model {
      
         $sql = new Sql();
 
-        $sql->query("insert into tb_cartproducts (idcart, idproduct) 
+        $sql->query("insert into tb_cartsproducts (idcart, idproduct) 
         values (:idcart, :idproduct)", [
             ':idcart'=>$this->getidcart(),
             'idproduct'=>$product->getidproduct()
@@ -118,7 +118,7 @@ class Cart extends Model {
 
         if($all){
 
-          $sql->query("update tb_cartproducts set dtremoved = NOW() 
+          $sql->query("update tb_cartsproducts set dtremoved = NOW() 
             where idcart = :idcart and idproduct = :idproduct  
             and dtremoved is null", [
             ':idcart'=>$this->getidcart(),
@@ -127,7 +127,7 @@ class Cart extends Model {
 
         } else {
 
-            $sql->query("update tb_cartproducts set dtremoved = NOW() 
+            $sql->query("update tb_cartsproducts set dtremoved = NOW() 
             where idcart = :idcart and idproduct = :idproduct and dtremoved is null
              limit 1", [
             ':idcart'=>$this->getidcart(),
@@ -142,13 +142,13 @@ class Cart extends Model {
 
         $sql = new Sql();
 
-        $rows = $sql->select("select b.idproduct, b.desproduct,
-        b.vlprice, b.vlheight, b.vllengh, b.vlweight, b.desurl COUNT(*) as nrqtd,
-        SUM(b.vlprice) as vltotal
-        from tb_cartproducts a inner join 
-        tb_products b on a.idproduct = b.idproduct where a.idcart = 
-        :idcart and a.dtremoved is null group by b.idproduct, b.desproduct,
-        b.vlprice, b.vlheight, b.vllengh, b.vlweight, b.desurl
+        $rows = $sql->select("select b.idproduct, b.desproduct, b.vlprice, b.vlwidth, b.vlheight, 
+        b.vllength, b.vlweight, b.desurl, 
+        COUNT(*) as nrqtd, SUM(b.vlprice) as vltotal from tb_cartsproducts a 
+        inner join tb_products b on a.idproduct = b.idproduct 
+        where a.idcart = :idcart 
+        and a.dtremoved is null group by b.idproduct, b.desproduct, b.vlprice, 
+        b.vlwidth, b.vlheight, b.vllength, b.vlweight, b.desurl 
         order by b.desproduct
          ", [
             ':idcart' =>$this->getidcart() 

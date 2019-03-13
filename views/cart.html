@@ -49,7 +49,7 @@
 										</td>
 
 										<td class="product-name">
-											<a href="/products/{$value.desurl}">{$value.desproduct}}</a>
+											<a href="/products/{$value.desurl}">{$value.desproduct}</a>
 										</td>
 
 										<td class="product-price">
@@ -58,15 +58,15 @@
 
 										<td class="product-quantity">
 											<div class="quantity buttons_added">
-												<input type="button" class="minus" value="-" onclick="window.location.href = '#'">
-												<input type="number" size="4" class="input-text qty text" title="Qty" value="1" min="0"
+												<input type="button" class="minus" value="-" onclick="window.location.href = '/cart/{$value.idproduct}/minus'">
+												<input type="number" size="4" class="input-text qty text" title="Qty" value="{$value.nrqtd}" min="0"
 													step="1">
-												<input type="button" class="plus" value="+" onclick="window.location.href = '#'">
+												<input type="button" class="plus" value="+" onclick="window.location.href = '/cart/{$value.idproduct}/add'">
 											</div>
 										</td>
 
 										<td class="product-subtotal">
-											<span class="amount">R${function="formatPrice($value.vlprice)"}</span>
+											<span class="amount">R${function="formatPrice($value.vltotal)"}</span>
 										</td>
 									</tr>
 									{/loop}
