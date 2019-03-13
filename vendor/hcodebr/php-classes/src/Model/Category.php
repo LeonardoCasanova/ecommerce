@@ -74,14 +74,15 @@ class Category extends Model {
         if($related === true){
 
             return $sql->select("select * from tb_products where idproduct in
-            ( select a.idproduct from tb_products a inner join tb_productscategories b on a.idproduct = b.idproduct WHERE b.idcategory = idcategory)", [
+            ( select a.idproduct from tb_products a inner join tb_productscategories b on a.idproduct = b.idproduct 
+            WHERE b.idcategory = :idcategory)", [
                 ":idcategory" => $this->getidcategory()]);
         } else {
 
          return   $sql->select("select * from tb_products where idproduct not in
-            ( select a.idproduct from tb_products a inner join tb_productscategories b on a.idproduct = b.idproduct WHERE b.idcategory = :idcategory)", [
+            (select a.idproduct from tb_products a inner join tb_productscategories b on a.idproduct = b.idproduct
+             WHERE b.idcategory = :idcategory)", [
             ":idcategory" => $this->getidcategory()]);
-
 
         }
     }
