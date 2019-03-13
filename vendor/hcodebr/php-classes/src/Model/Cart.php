@@ -104,7 +104,11 @@ class Cart extends Model {
      
         $sql = new Sql();
 
+<<<<<<< HEAD
         $sql->query("insert into tb_cartsproducts (idcart, idproduct) 
+=======
+        $sql->query("insert into tb_cartproducts (idcart, idproduct) 
+>>>>>>> e0e40471a418da4d5c90245ffb7c18841ec47563
         values (:idcart, :idproduct)", [
             ':idcart'=>$this->getidcart(),
             'idproduct'=>$product->getidproduct()
@@ -118,7 +122,11 @@ class Cart extends Model {
 
         if($all){
 
+<<<<<<< HEAD
           $sql->query("update tb_cartsproducts set dtremoved = NOW() 
+=======
+          $sql->query("update tb_cartproducts set dtremoved = NOW() 
+>>>>>>> e0e40471a418da4d5c90245ffb7c18841ec47563
             where idcart = :idcart and idproduct = :idproduct  
             and dtremoved is null", [
             ':idcart'=>$this->getidcart(),
@@ -127,7 +135,11 @@ class Cart extends Model {
 
         } else {
 
+<<<<<<< HEAD
             $sql->query("update tb_cartsproducts set dtremoved = NOW() 
+=======
+            $sql->query("update tb_cartproducts set dtremoved = NOW() 
+>>>>>>> e0e40471a418da4d5c90245ffb7c18841ec47563
             where idcart = :idcart and idproduct = :idproduct and dtremoved is null
              limit 1", [
             ':idcart'=>$this->getidcart(),
@@ -142,6 +154,7 @@ class Cart extends Model {
 
         $sql = new Sql();
 
+<<<<<<< HEAD
         $rows = $sql->select("select b.idproduct, b.desproduct, b.vlprice, b.vlwidth, b.vlheight, 
         b.vllength, b.vlweight, b.desurl, 
         COUNT(*) as nrqtd, SUM(b.vlprice) as vltotal from tb_cartsproducts a 
@@ -149,6 +162,15 @@ class Cart extends Model {
         where a.idcart = :idcart 
         and a.dtremoved is null group by b.idproduct, b.desproduct, b.vlprice, 
         b.vlwidth, b.vlheight, b.vllength, b.vlweight, b.desurl 
+=======
+        $rows = $sql->select("select b.idproduct, b.desproduct,
+        b.vlprice, b.vlheight, b.vllengh, b.vlweight, b.desurl COUNT(*) as nrqtd,
+        SUM(b.vlprice) as vltotal
+        from tb_cartproducts a inner join 
+        tb_products b on a.idproduct = b.idproduct where a.idcart = 
+        :idcart and a.dtremoved is null group by b.idproduct, b.desproduct,
+        b.vlprice, b.vlheight, b.vllengh, b.vlweight, b.desurl
+>>>>>>> e0e40471a418da4d5c90245ffb7c18841ec47563
         order by b.desproduct
          ", [
             ':idcart' =>$this->getidcart() 
