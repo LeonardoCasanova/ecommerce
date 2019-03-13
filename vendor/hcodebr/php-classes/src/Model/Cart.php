@@ -100,4 +100,61 @@ class Cart extends Model {
 
     }
 
+    public function addProduct(Product $product) {
+     
+        $sql = new Sql();
+
+        $sql->query("insert into tb_cartproducts (idcart, idproduct) 
+        values (:idcart, :idproduct)", [
+            ':idcart'=>$this->getidcart(),
+            'idproduct'=>$product->getidproduct()
+        ]);
+    }
+
+    public function removeProduct(Product $product, $all = false) {
+
+        $sql = new Sql();
+
+
+        if($all){
+
+          $sql->query("update tb_cartproducts set dtremoved = NOW() 
+            where idcart = :idcart and idproduct = :idproduct  
+            and dtremoved is null", [
+            ':idcart'=>$this->getidcart(),
+            'idproduct'=>$product->getidproduct()
+        ]);
+
+        } else {
+
+            $sql->query("update tb_cartproducts set dtremoved = NOW() 
+            where idcart = :idcart and idproduct = :idproduct and dtremoved is null
+             limit 1", [
+            ':idcart'=>$this->getidcart(),
+            'idproduct'=>$product->getidproduct()
+            ]);
+
+        }
+        
+    }
+
+    public function getProducts(){
+
+        $sql = new Sql();
+
+        $rows = $sql->select("select b.idproduct, b.desproduct,
+        b.vlprice, b.vlheight, b.vllengh, b.vlweight, b.desurl COUNT(*) as nrqtd,
+        SUM(b.vlprice) as vltotal
+        from tb_cartproducts a inner join 
+        tb_products b on a.idproduct = b.idproduct where a.idcart = 
+        :idcart and a.dtremoved is null group by b.idproduct, b.desproduct,
+        b.vlprice, b.vlheight, b.vllengh, b.vlweight, b.desurl
+        order by b.desproduct
+         ", [
+            ':idcart' =>$this->getidcart() 
+         ]);
+
+         return Product::checkList($rows);
+    }
+
 }
