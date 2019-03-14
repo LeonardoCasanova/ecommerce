@@ -241,6 +241,34 @@ class User extends Model {
         $_SESSION[User::ERROR_REGISTER] = $msg;
     }
 
+
+    public static function getErrorRegister() {
+
+        $msg = (isset($_SESSION[User::ERROR_REGISTER]) && $_SESSION[User::ERROR_REGISTER]) ? 
+        $_SESSION[User::ERROR_REGISTER] : '';
+
+        User::clearErrorRegister();
+        return $msg;
+    }
+
+    public static function clearErrorRegister() {
+
+        $_SESSION[User::ERROR_REGISTER] = NULL;
+    }
+    
+    public static function checkLoginExist($login) {
+
+       $sql = new Sql();
+       
+       $results = $sql->select("select * from tb_users where deslogin = :deslogin",[
+           ':deslogin'=>$login
+       ]);
+
+       return (count($results) > 0);
+
+    }
+
+
     public static function validForgotDecrypt($result) {
         $result = base64_decode($result);
         $code = mb_substr($result, openssl_cipher_iv_length('aes-256-cbc'), null, '8bit');
@@ -295,4 +323,6 @@ class User extends Model {
             'cost'=>12
         ]);
     }
+
+    
 }
