@@ -11,6 +11,8 @@ class User extends Model {
     const SECRET = "HcodePhp7_Secret";
     const ERROR = "UserError";
     const ERROR_REGISTER = "UserErrorRegister";
+    const SUCCESS = "UserSuccess";
+    
     public static function getFromSession() {
 
         $user = new User();
@@ -58,7 +60,7 @@ class User extends Model {
 
         $sql = new Sql();
 
-        $results = $sql->select("select * from tb_users where deslogin = :LOGIN", array(
+        $results = $sql->select("select * from tb_users a inner join tb_persons b on a.idperson = b.idperson where a.deslogin = :LOGIN", array(
             ":LOGIN" => $login,
         ));
 
@@ -66,13 +68,14 @@ class User extends Model {
             throw new \Exception("Usuário inexistente ou senha inválida.");
         }
 
+        
         $data = $results[0];
 
         if (password_verify($password, $data["despassword"]) === true) {
 
             $user = new User();
 
-            //$data['desperson'] = utf8_encode($data['desperson']);
+            $data['desperson'] = utf8_encode($data['desperson']);
 
             $user->setData($data);
 
@@ -323,6 +326,27 @@ class User extends Model {
             'cost'=>12
         ]);
     }
+
+
+    public static function clearSuccess() {
+
+        $_SESSION[User::SUCCESS] = NULL;
+    }
+    public static function setSuccess($msg) {
+
+        $_SESSION[User::SUCCESS] = $msg;
+    }
+
+    public static function getSuccess() {
+
+        $msg = (isset($_SESSION[User::SUCCESS]) && $_SESSION[User::SUCCESS]) ?
+        $_SESSION[User::SUCCESS] : '';
+
+        User::clearSuccess();
+        return $msg;
+    }
+
+  
 
     
 }
