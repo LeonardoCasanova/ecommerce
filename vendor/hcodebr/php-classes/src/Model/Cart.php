@@ -10,74 +10,73 @@ class Cart extends Model {
 
     const SESSION = "Cart";
     const SESSION_ERROR = "CartError";
-    
+
     public static function getFromSession() {
 
-      $cart = new Cart();
+        $cart = new Cart();
 
-      if (isset($_SESSION[Cart::SESSION]) &&(int)$_SESSION[Cart::SESSION]['idcart'] > 0) {
+        if (isset($_SESSION[Cart::SESSION]) && (int) $_SESSION[Cart::SESSION]['idcart'] > 0) {
 
-          $cart->get((int)$_SESSION[Cart::SESSION]['idcart']);
+            $cart->get((int) $_SESSION[Cart::SESSION]['idcart']);
 
-      } else {
+        } else {
 
-          $cart->getFromSessionID();
+            $cart->getFromSessionID();
 
-          if (!(int)$cart->getidcart() > 0) {
+            if (!(int) $cart->getidcart() > 0) {
 
-              $data = [
-                  'dessessionid' =>session_id()
-              ];
+                $data = [
+                    'dessessionid' => session_id(),
+                ];
 
-              if (User::checkLogin(false)) {
+                if (User::checkLogin(false)) {
 
-                  $user = User::getFromSession();
+                    $user = User::getFromSession();
 
-                  $data['iduser'] = $user->getiduser();
+                    $data['iduser'] = $user->getiduser();
 
-              }
+                }
 
-              $cart->setData($data);
+                $cart->setData($data);
 
-              $cart->save();
+                $cart->save();
 
-              $cart->setToSession();
+                $cart->setToSession();
 
-             // session_destroy();
+                // session_destroy();
 
-          }
+            }
 
-      }
-      return $cart;
-  }
+        }
+        return $cart;
+    }
 
-  public function setToSession() {
+    public function setToSession() {
 
-    $_SESSION[Cart::SESSION] = $this->getValues();
+        $_SESSION[Cart::SESSION] = $this->getValues();
 
-  }
+    }
     public function save() {
 
-      $sql = new Sql();
-      $results = $sql->select("CALL sp_carts_save(:idcart,:dessessionid, :iduser, :deszipcode,:vlfreight,:nrdays)", [
-          ':idcart' => $this->getidcart(), 
-          ':dessessionid' => $this->getdessessionid(),
-          ':iduser' => $this->getiduser(),
-          ':deszipcode' => $this->getdeszipcode(),
-          ':vlfreight' => $this->getvlfreight(),
-          ':nrdays' => $this->getnrdays()
-      ]);
+        $sql = new Sql();
+        $results = $sql->select("CALL sp_carts_save(:idcart,:dessessionid, :iduser, :deszipcode,:vlfreight,:nrdays)", [
+            ':idcart' => $this->getidcart(),
+            ':dessessionid' => $this->getdessessionid(),
+            ':iduser' => $this->getiduser(),
+            ':deszipcode' => $this->getdeszipcode(),
+            ':vlfreight' => $this->getvlfreight(),
+            ':nrdays' => $this->getnrdays(),
+        ]);
 
-      $this->setData($results[0]);
-  }
-   
+        $this->setData($results[0]);
+    }
 
     public function getFromSessionID() {
 
         $sql = new Sql();
 
         $results = $sql->select("select * from tb_carts where dessessionid = :dessessionid", [
-            ':dessessionid' => session_id()
+            ':dessessionid' => session_id(),
         ]);
 
         if (count($results) > 0) {
@@ -90,7 +89,7 @@ class Cart extends Model {
 
         $sql = new Sql();
         $results = $sql->select("select * from tb_carts where idcart = :idcart", [
-            ':idcart'=>$idcart
+            ':idcart' => $idcart,
         ]);
 
         if (count($results) > 0) {
@@ -102,13 +101,13 @@ class Cart extends Model {
     }
 
     public function addProduct(Product $product) {
-     
+
         $sql = new Sql();
 
-        $sql->query("insert into tb_cartsproducts (idcart, idproduct) 
+        $sql->query("insert into tb_cartsproducts (idcart, idproduct)
         values (:idcart, :idproduct)", [
-            ':idcart'=>$this->getidcart(),
-            'idproduct'=>$product->getidproduct()
+            ':idcart' => $this->getidcart(),
+            'idproduct' => $product->getidproduct(),
         ]);
 
         $this->getCalculateTotal();
@@ -118,48 +117,47 @@ class Cart extends Model {
 
         $sql = new Sql();
 
+        if ($all) {
 
-        if($all){
-
-          $sql->query("update tb_cartsproducts set dtremoved = NOW() 
-            where idcart = :idcart and idproduct = :idproduct  
+            $sql->query("update tb_cartsproducts set dtremoved = NOW()
+            where idcart = :idcart and idproduct = :idproduct
             and dtremoved is null", [
-            ':idcart'=>$this->getidcart(),
-            'idproduct'=>$product->getidproduct()
-        ]);
+                ':idcart' => $this->getidcart(),
+                'idproduct' => $product->getidproduct(),
+            ]);
 
         } else {
 
-            $sql->query("update tb_cartsproducts set dtremoved = NOW() 
+            $sql->query("update tb_cartsproducts set dtremoved = NOW()
             where idcart = :idcart and idproduct = :idproduct and dtremoved is null
              limit 1", [
-            ':idcart'=>$this->getidcart(),
-            'idproduct'=>$product->getidproduct()
+                ':idcart' => $this->getidcart(),
+                'idproduct' => $product->getidproduct(),
             ]);
 
         }
 
         $this->getCalculateTotal();
-        
+
     }
 
-    public function getProducts(){
+    public function getProducts() {
 
         $sql = new Sql();
 
-        $rows = $sql->select("select b.idproduct, b.desproduct, b.vlprice, b.vlwidth, b.vlheight, 
-        b.vllength, b.vlweight, b.desurl, 
-        COUNT(*) as nrqtd, SUM(b.vlprice) as vltotal from tb_cartsproducts a 
-        inner join tb_products b on a.idproduct = b.idproduct 
-        where a.idcart = :idcart 
-        and a.dtremoved is null group by b.idproduct, b.desproduct, b.vlprice, 
-        b.vlwidth, b.vlheight, b.vllength, b.vlweight, b.desurl 
+        $rows = $sql->select("select b.idproduct, b.desproduct, b.vlprice, b.vlwidth, b.vlheight,
+        b.vllength, b.vlweight, b.desurl,
+        COUNT(*) as nrqtd, SUM(b.vlprice) as vltotal from tb_cartsproducts a
+        inner join tb_products b on a.idproduct = b.idproduct
+        where a.idcart = :idcart
+        and a.dtremoved is null group by b.idproduct, b.desproduct, b.vlprice,
+        b.vlwidth, b.vlheight, b.vllength, b.vlweight, b.desurl
         order by b.desproduct
          ", [
-            ':idcart' =>$this->getidcart() 
-         ]);
+            ':idcart' => $this->getidcart(),
+        ]);
 
-         return Product::checkList($rows);
+        return Product::checkList($rows);
     }
 
     public function getProductsTotals() {
@@ -168,63 +166,67 @@ class Cart extends Model {
 
         $results = $sql->select("
         select sum(vlprice) as vlprice, sum(vlwidth) as vlwidth, sum(vlheight) as vlheight, sum(vllength) as vllength, sum(vlweight) as vlweight,
-        count(*) as nrqtd from tb_products a 
+        count(*) as nrqtd from tb_products a
         inner join tb_cartsproducts b on a.idproduct = b.idproduct
-        where b.idcart = :idcart and dtremoved is null;",[
-        ':idcart'=>$this->getidcart()
-         ]);
+        where b.idcart = :idcart and dtremoved is null;", [
+            ':idcart' => $this->getidcart(),
+        ]);
 
-         if(count($results) > 0) {
-             return $results[0];
+        if (count($results) > 0) {
+            return $results[0];
 
-         } else { 
+        } else {
 
-             return [];
-         }
+            return [];
+        }
 
     }
 
-    public function setFreight($nrzipcode){
+    public function setFreight($nrzipcode) {
 
         $nrzipcode = str_replace('-', '', $nrzipcode);
 
         $totals = $this->getProductsTotals();
 
-        if($totals['vlheight'] < 2) $totals['vlheight'] = 2;
-        if($totals['vllength'] < 2) $totals['vllength'] = 16;
+        if ($totals['vlheight'] < 2) {
+            $totals['vlheight'] = 2;
+        }
 
-        if($totals['nrqtd'] > 0) {
+        if ($totals['vllength'] < 2) {
+            $totals['vllength'] = 16;
+        }
+
+        if ($totals['nrqtd'] > 0) {
 
             $qs = http_build_query([
-             'nCdEmpresa'=>'',
-             'sDsSenha'=>'',
-             'nCdServico'=>'40010',
-             'sCepOrigem'=>'13330260',
-             'sCepDestino'=>$nrzipcode,
-             'nVlPeso'=>$totals['vlweight'],
-             'nCdFormato'=>'1',
-             'nVlComprimento'=>$totals['vllength'],
-             'nVlAltura'=>$totals['vlheight'],
-             'nVlLargura'=>$totals['vlwidth'],
-             'nVlDiametro'=>'0',
-             'sCdMaoPropria'=>'S',
-             'nVlValorDeclarado'=>$totals['vlprice'],
-             'sCdAvisoRecebimento'=>'S'
+                'nCdEmpresa' => '',
+                'sDsSenha' => '',
+                'nCdServico' => '40010',
+                'sCepOrigem' => '13330260',
+                'sCepDestino' => $nrzipcode,
+                'nVlPeso' => $totals['vlweight'],
+                'nCdFormato' => '1',
+                'nVlComprimento' => $totals['vllength'],
+                'nVlAltura' => $totals['vlheight'],
+                'nVlLargura' => $totals['vlwidth'],
+                'nVlDiametro' => '0',
+                'sCdMaoPropria' => 'S',
+                'nVlValorDeclarado' => $totals['vlprice'],
+                'sCdAvisoRecebimento' => 'S',
             ]);
 
-            $xml = simplexml_load_file(utf8_encode("http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx/CalcPrecoPrazo?".$qs));
-           
+            $xml = simplexml_load_file(utf8_encode("http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx/CalcPrecoPrazo?" . $qs));
+
             $result = $xml->Servicos->cServico;
 
-            if($result->MsgErro != '' ) {
+            if ($result->MsgErro != '') {
 
-             Cart::setMsgError($result->MsgErro );
+                Cart::setMsgError($result->MsgErro);
 
             } else {
 
                 Cart::clearMsgError();
             }
-
 
             $this->setnrdays($result->PrazoEntrega);
             $this->setvlfreight(Cart::formatValueToDecimal($result->Valor));
@@ -236,16 +238,14 @@ class Cart extends Model {
 
         } else {
 
-
         }
-       
+
     }
 
-    public static function formatValueToDecimal($value):float{
+    public static function formatValueToDecimal($value): float {
         $value = str_replace('.', '', $value);
         return str_replace(',', '.', $value);
     }
-
 
     public static function setMsgError() {
 
@@ -254,10 +254,10 @@ class Cart extends Model {
 
     public static function getMsgError() {
 
-       $msg =  (isset($_SESSION[Cart::SESSION_ERROR])) ? $_SESSION[Cart::SESSION_ERROR] : ""; 
-    
-       Cart::clearMsgError();
-       return $msg;
+        $msg = (isset($_SESSION[Cart::SESSION_ERROR])) ? $_SESSION[Cart::SESSION_ERROR] : "";
+
+        Cart::clearMsgError();
+        return $msg;
     }
 
     public static function clearMsgError() {
@@ -267,7 +267,7 @@ class Cart extends Model {
 
     public function updateFreight() {
 
-        if($this->getdeszipcode() != '') {
+        if ($this->getdeszipcode() != '') {
 
             $this->setFreight($this->getdeszipcode());
         }
