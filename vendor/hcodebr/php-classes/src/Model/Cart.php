@@ -10,7 +10,6 @@ class Cart extends Model {
 
     const SESSION = "Cart";
     const SESSION_ERROR = "CartError";
-
     public static function getFromSession() {
 
         $cart = new Cart();
@@ -138,7 +137,6 @@ class Cart extends Model {
         }
 
         $this->getCalculateTotal();
-
     }
 
     public function getProducts() {
@@ -271,9 +269,11 @@ class Cart extends Model {
 
             $this->setFreight($this->getdeszipcode());
         }
+       
     }
+ 
 
-    public function getValues() {
+   public function getValues() {
 
         $this->getCalculateTotal();
 
