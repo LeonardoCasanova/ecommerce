@@ -245,7 +245,7 @@ class Cart extends Model {
         return str_replace(',', '.', $value);
     }
 
-    public static function setMsgError() {
+    public static function setMsgError($msg) {
 
         $_SESSION[Cart::SESSION_ERROR] = $msg;
     }
@@ -290,6 +290,7 @@ class Cart extends Model {
         $this->setvlsubtotal($totals['vlprice']);
         $this->setvltotal($totals['vlprice'] + $this->getvlfreight());
 
+         return $totals;
     }
 
 }
