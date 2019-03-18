@@ -293,6 +293,12 @@ class Cart extends Model {
          return $totals;
     }
 
+
+
+    public static function removeFromSession(){
+        $_SESSION[Cart::SESSION] = NULL;
+    }
+
 }
 
 
