@@ -286,11 +286,12 @@ $app->post("/checkout", function () {
         break;
 
         case 2:
-
+        header("Location: /order/" . $order->getidorder()."/paypal");
         break;
+
     }
 
-    header("Location: /order/" . $order->getidorder());
+    header("Location: /boleto/" . $order->getidorder());
     exit;
 
 });
@@ -610,8 +611,9 @@ $app->get("/boleto/:idorder", function ($idorder) {
 
     // NÃO ALTERAR!
 
-    $path = $_SERVER['DOCUMENT_ROOT'] . "res" . DIRECTORY_SEPARATOR . "boletophp" . DIRECTORY_SEPARATOR . "include" . DIRECTORY_SEPARATOR;
+    $path = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . "res" . DIRECTORY_SEPARATOR . "boletophp" . DIRECTORY_SEPARATOR . "include" . DIRECTORY_SEPARATOR;
 
+    //die($path);
     require_once ($path . "funcoes_itau.php");
     require_once ($path . "layout_itau.php");
 

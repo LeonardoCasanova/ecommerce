@@ -67,6 +67,28 @@ class Order extends Model {
 
     }
 
+  public function notifyOrders(){
+    $sql = new Sql();
+
+    $results = $sql->select("select count(*) as orders from  tb_orders a
+    inner join tb_ordersstatus b using(idstatus) 
+    inner join tb_carts c using(idcart)
+    inner join tb_users d on d.iduser = a.iduser 
+    inner join tb_addresses e using(idaddress)
+    inner join tb_persons f on f.idperson = d.idperson
+    order by a.dtregister desc");
+
+    if (count($results) > 0) {
+        return $results[0];
+
+    } else {
+
+        return [];
+    }
+
+  }
+    
+
 
     public function delete() {
        

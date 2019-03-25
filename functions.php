@@ -2,6 +2,7 @@
 
 use \Hcode\Model\User;
 use \Hcode\Model\Cart;
+use \Hcode\Model\Order;
 
 function formatDate($date){
 
@@ -32,6 +33,17 @@ function getUserName(){
 
   return  $user->getdesperson();
 
+}
+
+
+function countOrders(){
+
+  $order = new Order();
+
+  $count = $order->notifyOrders();
+  
+  
+ return $count['orders'];
 }
 
 
