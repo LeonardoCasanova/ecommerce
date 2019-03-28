@@ -4,11 +4,16 @@
 use \Hcode\PageAdmin;
 use \Hcode\Model\User;
 use \Hcode\Model\Category;
+use \Hcode\Model\Order;
 
 
 $app->get('/admin', function () {
 
   User::verifyLogin();
+
+  $order = new Order();
+
+  $count = $order->notifyOrders();
 
   $page = new PageAdmin();
 

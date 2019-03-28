@@ -25,12 +25,23 @@ scratch. This page gets rid of all links and provides the needed markup only.
   -->
     <link rel="stylesheet" href="/res/admin/dist/css/skins/skin-blue.min.css">
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
   <script src="/res/admin/https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
   <script src="/res/admin/https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
+
+<script>
+  $(document).ready(function(){
+     $( "#see" ).click(function() {
+       
+     });
+ });
+</script>
+
   </head>
   <!--
 BODY TAG OPTIONS:
@@ -64,7 +75,7 @@ desired effect
           <!-- mini logo for sidebar mini 50x50 pixels -->
           <span class="logo-mini"><b>A</b>LT</span>
           <!-- logo for regular state and mobile devices -->
-          <span class="logo-lg"><b>Admin</b>LTE</span>
+          <span class="logo-lg"><b>Admin</b></span>
         </a>
 
         <!-- Header Navbar -->
@@ -79,43 +90,50 @@ desired effect
               <!-- Messages: style can be found in dropdown.less-->
               <li class="dropdown messages-menu">
                 <!-- Menu toggle button -->
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  <i class="fa fa-envelope-o"></i>
-                  <span class="label label-success">4</span>
-                </a>
-                <ul class="dropdown-menu">
-                  <li class="header">You have 4 messages</li>
-                  <li>
-                    <!-- inner menu: contains the messages -->
-                    <ul class="menu">
-                      <li>
-                        <!-- start message -->
-                        <a href="#">
-                          <div class="pull-left">
-                            <!-- User Image -->
-                            <img src="/res/admin/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-                          </div>
-                          <!-- Message title and timestamp -->
-                          <h4>
-                            Support Team
-                            <small><i class="fa fa-clock-o"></i> 5 mins</small>
-                          </h4>
-                          <!-- The message -->
-                          <p>Why not buy a new awesome theme?</p>
-                        </a>
-                      </li>
-                      <!-- end message -->
-                    </ul>
-                    <!-- /.menu -->
-                  </li>
-                  <li class="footer"><a href="#">See All Messages</a></li>
-                </ul>
-              </li>
+
+                <?php if(  countOrders() > 0  ){ ?>
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <i class="fa fa-bell-o"></i>
+                    <span class="label label-success" id="envelope"><?php echo countOrders(); ?></span>                                                
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li class="header">You have <?php echo countOrders(); ?> messages</li>
+                    <li>
+                      <!-- inner menu: contains the messages -->
+                      <ul class="menu">
+                        <li>
+                          <!-- start message -->
+                          <a href="#">
+                            <div class="pull-left">
+                              <!-- User Image -->
+                              <img src="/res/admin/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                            </div>
+                            <!-- Message title and timestamp -->
+                            <h4>
+                              Support Team
+                              <small><i class="fa fa-clock-o"></i> 5 mins</small>
+                            </h4>
+                            <!-- The message -->
+                            <p>Novo Pedido para atualização</p>
+                          </a>
+                        </li>
+                        <!-- end message -->
+                      </ul>
+                      <!-- /.menu -->
+                    </li>
+                    <li class="footer" id="see"><a href="/admin/orders">ver</a></li>
+                  </ul>
+                <?php }else{ ?>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                      <i class="fa fa-envelope-o"></i>
+                      <span class="label label-success"></span>                                                
+                    </a>
+                <?php } ?> 
               <!-- /.messages-menu -->
 
-              <!-- Notifications Menu -->
+              <!-- Notifications Menu 
               <li class="dropdown notifications-menu">
-                <!-- Menu toggle button -->
+                 Menu toggle button 
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                   <i class="fa fa-bell-o"></i>
                   <span class="label label-warning">10</span>
@@ -123,21 +141,21 @@ desired effect
                 <ul class="dropdown-menu">
                   <li class="header">You have 10 notifications</li>
                   <li>
-                    <!-- Inner Menu: contains the notifications -->
+                    Inner Menu: contains the notifications 
                     <ul class="menu">
                       <li>
-                        <!-- start notification -->
+                         start notification 
                         <a href="#">
                           <i class="fa fa-users text-aqua"></i> 5 new members joined today
                         </a>
                       </li>
-                      <!-- end notification -->
+                      end notification 
                     </ul>
                   </li>
                   <li class="footer"><a href="#">View all</a></li>
                 </ul>
               </li>
-              <!-- Tasks Menu -->
+                    Tasks Menu -->
               <li class="dropdown tasks-menu">
                 <!-- Menu Toggle Button -->
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -182,7 +200,7 @@ desired effect
                   <!-- The user image in the navbar-->
                   <img src="/res/admin/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
                   <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                  <span class="hidden-xs">Alexander Pierce</span>
+                  <span class="hidden-xs"><?php echo getUserName(); ?></span>
                 </a>
                 <ul class="dropdown-menu">
                   <!-- The user image in the menu -->
@@ -190,25 +208,12 @@ desired effect
                     <img src="/res/admin/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 
                     <p>
-                      Alexander Pierce - Web Developer
+                      <?php echo getUserName(); ?> - Web Developer
                       <small>Member since Nov. 2012</small>
                     </p>
                   </li>
                   <!-- Menu Body -->
-                  <li class="user-body">
-                    <div class="row">
-                      <div class="col-xs-4 text-center">
-                        <a href="#">Followers</a>
-                      </div>
-                      <div class="col-xs-4 text-center">
-                        <a href="#">Sales</a>
-                      </div>
-                      <div class="col-xs-4 text-center">
-                        <a href="#">Friends</a>
-                      </div>
-                    </div>
-                    <!-- /.row -->
-                  </li>
+              
                   <!-- Menu Footer-->
                   <li class="user-footer">
                     <div class="pull-left">
@@ -240,7 +245,7 @@ desired effect
               <img src="/res/admin/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
             </div>
             <div class="pull-left info">
-              <p>Alexander Pierce</p>
+              <p><?php echo getUserName(); ?></p>
               <!-- Status -->
               <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
             </div>
