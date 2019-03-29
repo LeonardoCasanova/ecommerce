@@ -33,6 +33,7 @@ $app->get('/admin/users/:iduser/password', function ($iduser) {
       "msgError"=>User::getError(),
       "msgSuccess" => User::getSuccess()
   ));
+  exit;
 });
 
 $app->post('/admin/users/:iduser/password', function ($iduser) {

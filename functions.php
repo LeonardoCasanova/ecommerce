@@ -35,6 +35,15 @@ function getUserName(){
 
 }
 
+function getUserNameAdmin(){
+
+  $user = User::getFromSessionAdmin();
+
+  return  $user->getdesperson();
+
+}
+
+
 
 function countOrders(){
 

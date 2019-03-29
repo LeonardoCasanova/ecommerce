@@ -338,8 +338,9 @@ $app->get("/login", function () {
 $app->post("/login", function () {
 
     try {
+        
         User::login($_POST['login'], $_POST['password']);
-
+      
     } catch (\Exception $e) {
 
         User::setError($e->getMessage());
