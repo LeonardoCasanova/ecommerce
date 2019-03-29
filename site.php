@@ -162,7 +162,7 @@ $app->get("/checkout", function () {
 
     }
 
-    if (!$address->getdesadddress()) {
+    if (!$address->getdesaddress()) {
         $address->setdesaddress('');
     }
 
@@ -291,7 +291,7 @@ $app->post("/checkout", function () {
 
     }
 
-    header("Location: /boleto/" . $order->getidorder());
+    //header("Location: /boleto/" . $order->getidorder());
     exit;
 
 });

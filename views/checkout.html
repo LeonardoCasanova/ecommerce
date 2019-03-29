@@ -123,7 +123,6 @@
 												<input type="radio" id="method-paypal" style="float:left;margin: 30px;" name="payment-method" placeholder="payment" value="2">
 												<label class="" for="method-paypal" ><img style="height: 64px;" src="/res/site/img/logo-paypal.png"></label>
 											</p>
-
 											<div id="payment">
 												<div class="form-row place-order">
 													<input type="submit" data-value="Place order" value="Continuar" id="place_order" name="woocommerce_checkout_place_order" class="button alt">
