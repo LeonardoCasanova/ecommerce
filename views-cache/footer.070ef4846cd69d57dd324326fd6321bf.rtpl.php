@@ -5,7 +5,7 @@
           <div class="col-md-3 col-sm-6">
               <div class="footer-about-us">
                   <h2>Hcode Store</h2>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis sunt id doloribus vero quam laborum quas alias dolores blanditiis iusto consequatur, modi aliquid eveniet eligendi iure eaque ipsam iste, pariatur omnis sint! Suscipit, debitis, quisquam. Laborum commodi veritatis magni at?</p>
+                  <p></p>
                   <div class="footer-social">
                       <a href="https://www.facebook.com/hcodebr" target="_blank"><i class="fa fa-facebook"></i></a>
                       <a href="https://twitter.com/hcodebr" target="_blank"><i class="fa fa-twitter"></i></a>
@@ -18,7 +18,7 @@
               <div class="footer-menu">
                   <h2 class="footer-wid-title">Navegação </h2>
                   <ul>
-                      <li><a href="#">Minha Conta</a></li>
+                      <li><a href="/profile">Minha Conta</a></li>
                       <li><a href="#">Meus Pedidos</a></li>
                       <li><a href="#">Lista de Desejos</a></li>
                   </ul>                        
@@ -37,7 +37,7 @@
           <div class="col-md-3 col-sm-6">
               <div class="footer-newsletter">
                   <h2 class="footer-wid-title">Newsletter</h2>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis sunt id doloribus!</p>
+                  <p></p>
                   <div class="newsletter-form">
                       <form action="#">
                           <input type="email" placeholder="Type your email">
@@ -55,7 +55,7 @@
       <div class="row">
           <div class="col-md-8">
               <div class="copyright">
-                  <p>&copy; 2017 Hcode Treinamentos. <a href="http://www.hcode.com.br" target="_blank">hcode.com.br</a></p>
+                  <p>&copy; 2019 Hcode Treinamentos. <a href="http://www.hcode.com.br" target="_blank">hcode.com.br</a></p>
               </div>
           </div>
           

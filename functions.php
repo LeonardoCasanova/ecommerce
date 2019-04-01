@@ -43,18 +43,23 @@ function getUserNameAdmin(){
 
 }
 
-
-
 function countOrders(){
 
   $order = new Order();
 
   $count = $order->notifyOrders();
-  
-  
+
  return $count['orders'];
 }
 
+function countUsers(){
+
+  $user = new User();
+
+  $count = $user->countUsers();
+  
+ return $count['users'];
+}
 
 function getCartNrQtd() {
 

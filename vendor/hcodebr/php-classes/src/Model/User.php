@@ -471,6 +471,27 @@ class User extends Model
         ];
     }
 
+    public  function countUsers() {
+
+        $sql = new Sql();
+
+        $results = $sql->select("
+        select count(*) as users
+        from tb_users a
+        inner join tb_persons b using(idperson)
+        order by b.desperson        
+        ");
+
+        
+        if (count($results) > 0) {
+            return $results[0];
+    
+        } else {
+    
+            return [];
+        }
+    }
+
     public static function getPageSearch($search, $page = 1, $itemsPerPage = 10)
     {
 
